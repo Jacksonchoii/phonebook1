@@ -204,48 +204,48 @@ public class PhoneDao {
 	// phone 검색
 	
 	//검색(like문을 이용한 select) --> 실패 더 공부하기 
-		public List<PersonVo> personSearch(String str) {
-			List<PersonVo> personList = new ArrayList<PersonVo>();                                                
+	public List<PersonVo> personSearch(String str) {
+		List<PersonVo> personList = new ArrayList<PersonVo>();                                                
 	        
-			//DB접속                                                                                                  
-			getConnection();                                                                                        
+		//DB접속                                                                                                  
+		getConnection();                                                                                        
 			                                                                                                        
-			try {                                                                                                   
-			    // 3. SQL문 준비 / 바인딩 / 실행  
+		try {                                                                                                   
+			   // 3. SQL문 준비 / 바인딩 / 실행  
 				
-				String query = "";
-				query += " select  person_id,  ";
-				query += "         name,       ";
-				query += "         hp,         ";
-				query += "         company     ";
-				query += " from person         ";
-				query += " where name like ?   ";
-				query += " or hp like ?        ";
-				query += " or company like ?   ";
-				query += " order by person_id  ";
+			String query = "";
+			query += " select  person_id,  ";
+			query += "         name,       ";
+			query += "         hp,         ";
+			query += "         company     ";
+			query += " from person         ";
+			query += " where name like ?   ";
+			query += " or hp like ?        ";
+			query += " or company like ?   ";
+			query += " order by person_id  ";
 				
-				pstmt = conn.prepareStatement(query);
+			pstmt = conn.prepareStatement(query);
 				
-				pstmt.setString(1, "%" + str + "%");
-				pstmt.setString(2, "%" + str + "%");
-				pstmt.setString(3, "%" + str + "%");
+			pstmt.setString(1, "%" + str + "%");
+			pstmt.setString(2, "%" + str + "%");
+			pstmt.setString(3, "%" + str + "%");
 				
-				rs = pstmt.executeQuery();
+			rs = pstmt.executeQuery();
 				
-				while(rs.next()) {
-					int personId = rs.getInt("person_id");
-					String name = rs.getString("name");
-					String hp = rs.getString("hp");
-					String company = rs.getString("company");
+			while(rs.next()) {
+				int personId = rs.getInt("person_id");
+				String name = rs.getString("name");
+				String hp = rs.getString("hp");
+				String company = rs.getString("company");
 					
-					PersonVo pvo = new PersonVo(personId, name, hp, company);
-					personList.add(pvo);
-				}
+				PersonVo pvo = new PersonVo(personId, name, hp, company);
+				personList.add(pvo);
+			}
 				
-				// 4. 결과 처리                                                                                                   
-			    System.out.println("[검색어 ' " + str + " ' 이(가) 포함된 리스트 입니다.]");                                                                                                    
+			// 4. 결과 처리                                                                                                   
+		    System.out.println("[검색어 ' " + str + " ' 이(가) 포함된 리스트 입니다.]");                                                                                                    
 			} catch (SQLException e) {                                                                              
-			    System.out.println("error:" + e);                                                                   
+		    System.out.println("error:" + e);                                                                   
 			}                                                                                                       
 			                                                                                                        
 			//자원정리                                                                                                  
@@ -254,5 +254,46 @@ public class PhoneDao {
 			return personList;
 		}
 	
+		//사람 1명 정보 가져오기
+	public PersonVo getPerson(int personId) {
+		PersonVo personVo = null;
+		
+		getConnection();
+		try {
+			// 3. SQL문 준비 / 바인딩 / 실행
+			String query= "";
+			query += " select person_id, ";
+			query += " 		  name, ";
+			query += " 		  hp, ";
+			query += " 		  company ";
+			query += " from person ";
+			query += " where person_id = ? ";
+			
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, personId);
+			
+			rs = pstmt.executeQuery();
+			
+			
+			// 4. 결과 처리 
+			while(rs.next()) {
+				int personID = rs.getInt("person_id");
+				String name = rs.getString("name");
+				String hp = rs.getString("hp");
+				String company = rs.getString("company");
+				
+				personVo = new PersonVo(personID, name, hp, company);
+			}
+			
+			
+			
+		}catch (SQLException e) {
+			System.out.println("error:" + e);
+		}
+		
+		
+		close();
+		return personVo;
+	}
 
 }

@@ -15,7 +15,7 @@
 	</p>
 	
 	
-	<form action="./insert.jsp" method="get">
+	<form action="./insert.jsp" method="post">
 		이름(name): <input type ="text" name="name"><br>
 		핸드폰(hp): <input type ="text" name="hp"><br>
 		회사(company): <input type ="text" name="company"><br>
